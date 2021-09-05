@@ -31,3 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Apply the modifier on keys that are tapped during a short hold of a modtap
 #define PERMISSIVE_HOLD
+
+#define MK_KINETIC_SPEED
+#define MOUSEKEY_MOVE_DELTA 2
+#define MOUSE_KEY_INTERVAL 16
