@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Apply the modifier on keys that are tapped during a short hold of a modtap
 #define PERMISSIVE_HOLD
 
-#define MK_KINETIC_SPEED
-#define MOUSEKEY_MOVE_DELTA 2
-#define MOUSE_KEY_INTERVAL 16
+// ripped from https://www.reddit.com/r/olkb/comments/72u8ou/qmk_mouse_keys_rock/
+#define MOUSEKEY_INTERVAL 16
+#define MOUSEKEY_DELAY 0
+#define MOUSEKEY_TIME_TO_MAX 60
+#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_WHEEL_DELAY 0
