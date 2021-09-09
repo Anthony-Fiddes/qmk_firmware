@@ -11,6 +11,7 @@
 #define HOME_S LSFT_T(KC_S)
 #define HOME_T LCTL_T(KC_T)
 #define HOME_TAB LT(_NUMS, KC_TAB)
+#define HOME_BSPC LT(_NUMS, KC_BSPC)
 
 // Right-hand home row mods
 #define HOME_N RCTL_T(KC_N)
@@ -23,30 +24,39 @@
 
 // Tap dance indices
 enum {
+    // Home Tab
+    H_TAB = 0,
     // Home Enter
-    H_ENT = 0,
+    H_ENT,
     // Toggle game layer, rshift when held
-    GAME
+    GAME,
+    PRN,
+    CBRK,
+    BRC,
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
+  [H_TAB] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ENT, _NUMS),
   [H_ENT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ENT, _NAV),
-  [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RSFT, _QWERTY)
+  [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RSFT, _QWERTY),
+  [PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
+  [CBRK] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
+  [BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_COLEMAK] = LAYOUT(
       //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_CAPS,
+         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_LOCK,
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_GRV,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                               KC_J,    KC_L,    KC_U,     KC_Y,   KC_SCLN, KC_BSLS,
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_LCTL, HOME_A,   HOME_R,  HOME_S,  HOME_T, KC_D,                               KC_H,    HOME_N,  HOME_E,   HOME_I, HOME_O,  KC_QUOT,
       //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BSPC,          HOME_SPC, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,TD(GAME),
+         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,   HOME_BSPC,         HOME_SPC, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,TD(GAME),
       //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                        KC_LGUI, HOME_TAB, KC_BSPC,                  HOME_SPC,TD(H_ENT),KC_RALT
+                                        KC_LGUI,TD(H_TAB),HOME_BSPC,                 HOME_SPC,TD(H_ENT),KC_RALT
       //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
 ),
 
@@ -56,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        KC_QUES, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_PPLS,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_BSPC, KC_EQL,  KC_LBRC, KC_LCBR, KC_LPRN, KC_COLN,                            KC_UNDS, KC_4,    KC_5,    KC_6,    KC_MINS, KC_COLN,
+       KC_BSPC, KC_EQL,  TD(BRC), TD(CBRK),TD(PRN), KC_COLN,                            KC_UNDS, KC_4,    KC_5,    KC_6,    KC_MINS, KC_COLN,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
        RESET,   KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_PIPE, _______,          _______, KC_ASTR,  KC_1,    KC_2,    KC_3,    KC_PLUS, KC_AMPR,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -66,7 +76,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_NAV] = LAYOUT(
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-       KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F4,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
+       KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F4,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_LOCK,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        RGB_TOG, BL_STEP, KC_VOLU, KC_VOLD, KC_MUTE, _______,                            KC_PSCR, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_ACL2,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
