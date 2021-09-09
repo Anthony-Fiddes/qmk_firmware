@@ -17,9 +17,22 @@
 #define HOME_E RSFT_T(KC_E)
 #define HOME_I LALT_T(KC_I)
 #define HOME_O RGUI_T(KC_O)
-#define HOME_ENT LT(_NAV, KC_ENT)
+#define HOME_SPC LT(_NAV, KC_SPC)
 
 #define TOG_GAME TG(_QWERTY)
+
+// Tap dance indices
+enum {
+    // Home Enter
+    H_ENT = 0,
+    // Toggle game layer, rshift when held
+    GAME
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [H_ENT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ENT, _NAV),
+  [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RSFT, _QWERTY)
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -31,9 +44,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_LCTL, HOME_A,   HOME_R,  HOME_S,  HOME_T, KC_D,                               KC_H,    HOME_N,  HOME_E,   HOME_I, HOME_O,  KC_QUOT,
       //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BSPC,           KC_SPC, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_BSPC,          HOME_SPC, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,TD(GAME),
       //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                        KC_LGUI, HOME_TAB, KC_BSPC,                  KC_SPC,  HOME_ENT, KC_RALT
+                                        KC_LGUI, HOME_TAB, KC_BSPC,                  HOME_SPC,TD(H_ENT),KC_RALT
       //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
 ),
 
@@ -55,11 +68,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
        KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F4,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       RGB_TOG, BL_STEP, KC_VOLU, KC_VOLD, KC_MUTE, _______,                            KC_PSCR, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_ACL1,
+       RGB_TOG, BL_STEP, KC_VOLU, KC_VOLD, KC_MUTE, _______,                            KC_PSCR, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_ACL2,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       RGB_MOD, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, KC_APP,                             KC_BTN2,  KC_LEFT, KC_UP,  KC_DOWN, KC_RGHT, KC_ACL0,
+       RGB_MOD, KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, KC_APP,                             KC_BTN2,  KC_LEFT, KC_UP,  KC_DOWN, KC_RGHT, KC_ACL1,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       RESET,   KC_PSCR, KC_MPRV, KC_MNXT, KC_MPLY, _______, _______,          _______, KC_BTN1, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, TOG_GAME,
+       RESET,   KC_PSCR, KC_MPRV, KC_MNXT, KC_MPLY, _______, _______,          _______, KC_BTN1, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, KC_ACL0,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                       _______, _______, _______,                   _______, _______, _______
     //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
