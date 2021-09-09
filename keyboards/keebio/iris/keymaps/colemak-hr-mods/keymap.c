@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 
-
 #define _COLEMAK 0
 #define _NUMS 1
 #define _NAV 2
@@ -26,7 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_COLEMAK] = LAYOUT(
       //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL,
+         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_CAPS,
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_GRV,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                               KC_J,    KC_L,    KC_U,     KC_Y,   KC_SCLN, KC_BSLS,
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -44,9 +43,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        KC_QUES, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_PPLS,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_BSPC, KC_ASTR, KC_LBRC, KC_LPRN, KC_LCBR, KC_COLN,                            KC_UNDS, KC_4,   KC_5,     KC_6,    KC_MINS, KC_COLN,
+       KC_BSPC, KC_EQL,  KC_LBRC, KC_LCBR, KC_LPRN, KC_COLN,                            KC_UNDS, KC_4,    KC_5,    KC_6,    KC_MINS, KC_COLN,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       RESET,   KC_CIRC, KC_RBRC, KC_RPRN, KC_RCBR, KC_PIPE, _______,          _______, KC_PEQL, KC_1,    KC_2,    KC_3,    KC_PLUS, KC_AMPR,
+       RESET,   KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_PIPE, _______,          _______, KC_ASTR,  KC_1,    KC_2,    KC_3,    KC_PLUS, KC_AMPR,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                       _______, _______, _______,                    _______,_______, KC_0
     //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -68,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_QWERTY] = LAYOUT(
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
+        KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_CAPS,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
@@ -80,3 +79,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
 ),
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    uint8_t mod_state = get_mods();
+
+    switch (keycode) {
+        // modified using this really helpful guide:
+        // https://beta.docs.qmk.fm/using-qmk/simple-keycodes/feature_advanced_keycodes#shift-backspace-for-delete-id-shift-backspace-for-delete
+        case KC_BSPC: {
+            static bool del_registered;
+            if (record->event.pressed) {
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    del_mods(MOD_MASK_SHIFT);
+                    register_code(KC_DEL);
+                    del_registered = true;
+                    set_mods(mod_state);
+                    return false;
+                }
+            } else {
+                if (del_registered) {
+                    unregister_code(KC_DEL);
+                    del_registered = false;
+                    return false;
+                }
+            }
+
+            break;
+        }
+    }
+    return true;
+}
