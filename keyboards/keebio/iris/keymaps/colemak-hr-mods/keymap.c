@@ -86,26 +86,27 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
         // modified using this really helpful guide:
         // https://beta.docs.qmk.fm/using-qmk/simple-keycodes/feature_advanced_keycodes#shift-backspace-for-delete-id-shift-backspace-for-delete
-        case KC_BSPC: {
-            static bool del_registered;
-            if (record->event.pressed) {
-                if (get_mods() & MOD_MASK_SHIFT) {
-                    del_mods(MOD_MASK_SHIFT);
-                    register_code(KC_DEL);
-                    del_registered = true;
-                    set_mods(mod_state);
-                    return false;
-                }
-            } else {
-                if (del_registered) {
-                    unregister_code(KC_DEL);
-                    del_registered = false;
-                    return false;
-                }
+    case KC_BSPC: {
+        static bool del_registered;
+        if (record->event.pressed) {
+            if (mod_state & MOD_MASK_SHIFT) {
+                del_mods(MOD_MASK_SHIFT);
+                register_code(KC_DEL);
+                del_registered = true;
+                set_mods(mod_state);
+                return false;
             }
-
-            break;
         }
+        else {
+            if (del_registered) {
+                unregister_code(KC_DEL);
+                del_registered = false;
+                return false;
+            }
+        }
+
+        break;
+    }
     }
     return true;
 }
