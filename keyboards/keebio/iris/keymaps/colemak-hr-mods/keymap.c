@@ -28,7 +28,7 @@ enum {
     H_TAB = 0,
     // Home Enter
     H_ENT,
-    // Toggle game layer, rshift when held
+    // Toggle game layer on double tap, rshift when held
     GAME,
     PRN,
     CBRK,
@@ -36,7 +36,7 @@ enum {
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  [H_TAB] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ENT, _NUMS),
+  [H_TAB] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_TAB, _NUMS),
   [H_ENT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_ENT, _NAV),
   [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RSFT, _QWERTY),
   [PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
@@ -103,33 +103,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    uint8_t mod_state = get_mods();
-
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        // modified using this really helpful guide:
-        // https://beta.docs.qmk.fm/using-qmk/simple-keycodes/feature_advanced_keycodes#shift-backspace-for-delete-id-shift-backspace-for-delete
-    case KC_BSPC: {
-        static bool del_registered;
-        if (record->event.pressed) {
-            if (mod_state & MOD_MASK_SHIFT) {
-                del_mods(MOD_MASK_SHIFT);
-                register_code(KC_DEL);
-                del_registered = true;
-                set_mods(mod_state);
-                return false;
-            }
-        }
-        else {
-            if (del_registered) {
-                unregister_code(KC_DEL);
-                del_registered = false;
-                return false;
-            }
-        }
-
-        break;
+        case HOME_BSPC:
+        case HOME_SPC:
+            return TAPPING_TERM + 90;
+        default:
+            return TAPPING_TERM;
     }
-    }
-    return true;
 }
