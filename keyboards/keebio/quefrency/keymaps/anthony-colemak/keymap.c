@@ -20,10 +20,15 @@ enum {
     PRN,
     CBRK,
     BRC,
+    // Layer Toggles
+    NAVT,
+    NUMT,
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_F9, _QWERTY),
+  [NAVT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RALT, _NAV),
+  [NUMT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_APP, _NUMS),
   [PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
   [CBRK] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
   [BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
@@ -39,7 +44,6 @@ enum custom_keycodes {
 #define HM_S LSFT_T(KC_S)
 #define HM_T LCTL_T(KC_T)
 #define HM_LSPC LT(_NUMS, KC_SPC)
-#define HM_RSPC LT(_NAV, KC_SPC)
 #define HM_MEN LT(_NAV, KC_APP)
 
 // Right-hand home row mods
@@ -47,7 +51,7 @@ enum custom_keycodes {
 #define HM_E RSFT_T(KC_E)
 #define HM_I LALT_T(KC_I)
 #define HM_O RGUI_T(KC_O)
-#define L_ALT LALT_T(KC_APP)
+#define HM_RSPC LT(_NAV, KC_SPC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT_65_with_macro(
@@ -55,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F3,      KC_F4,   KC_TAB,   KC_Q,    KC_W,    KC_F,     KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN,    KC_LBRC, KC_RBRC, KC_BSLS,             KC_PGDN, \
     KC_F5,      KC_F6,   KC_BSPC,  HM_A,    HM_R,    HM_S,     HM_T,    KC_D,    KC_H,    HM_N,    HM_E,    HM_I,    HM_O,       KC_QUOT, KC_ENT,                       KC_HOME, \
     KC_F7,      KC_F8,   KC_LSFT,  KC_Z,    KC_X,    KC_C,     KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT, KC_UP,                        KC_END, \
-    TD(GAME),   KC_PSCR, KC_LCTL,  KC_APP,  KC_LGUI, L_ALT,    HM_LSPC,           _______,HM_RSPC, KC_RALT, KC_RCTL, KC_RGUI,    KC_LEFT, KC_DOWN, KC_RGHT
+    TD(GAME),   KC_PSCR, KC_LCTL,  KC_LALT, KC_LGUI, TD(NUMT), HM_LSPC,           _______,HM_RSPC, TD(NAVT),KC_RCTL, KC_RGUI,    KC_LEFT, KC_DOWN, KC_RGHT
   ),
 
   [_NUMS] = LAYOUT_65_with_macro(
@@ -68,10 +72,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NAV] = LAYOUT_65_with_macro(
     _______, _______, KC_GESC, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,  KC_BSPC, _______, \
-    _______, _______, RGB_TOG, RGB_MOD, _______, _______, _______, _______, _______, KC_HOME, KC_PGUP, KC_PGDN, KC_END, _______, _______, _______, _______, \
+    _______, _______, _______, KC_END,  KC_PGDN, KC_PGUP, KC_HOME, _______, _______, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  _______, _______, _______, _______, \
     _______, _______, KC_ESC,  KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______, _______, KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    RESET,   _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______, _______, _______
+    _______, RGB_TOG, KC_CAPS, _______, KC_BTN3, KC_BTN2, KC_BTN1, _______, _______, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, _______, _______, _______, \
+    RESET,   RGB_MOD, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
   [_QWERTY] = LAYOUT_65_with_macro(
@@ -79,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,   _______,   KC_TAB,  KC_Q,    KC_W,    KC_E,     KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,          KC_END, \
     _______,   _______,   KC_BSPC, KC_A,    KC_S,    KC_D,     KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,                    KC_PGUP, \
     _______,   _______,   KC_LSFT, KC_Z,    KC_X,    KC_C,     KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, KC_UP,                     KC_PGDN, \
-    TD(GAME),  _______,   KC_LCTL, KC_APP, KC_LGUI, L_ALT,    KC_SPC,           _______, KC_SPC,  KC_RALT, KC_RCTL, KC_RGUI, KC_LEFT, KC_DOWN, KC_RGHT
+    TD(GAME),  _______,   KC_LCTL, KC_APP, KC_LGUI, KC_LALT,   KC_SPC,           _______, KC_SPC,  KC_RALT, KC_RCTL, KC_RGUI, KC_LEFT, KC_DOWN, KC_RGHT
   ),
 };
 
@@ -89,6 +93,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case TD(CBRK):
         case TD(BRC):
         case TD(GAME):
+        case TD(NAVT):
+        case TD(NUMT):
             return TAPPING_TERM + 50;
         default:
             return TAPPING_TERM;

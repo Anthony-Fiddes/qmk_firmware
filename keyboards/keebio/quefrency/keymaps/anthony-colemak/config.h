@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define USE_I2C
 
 // Configure the global tapping term (default: 200ms)
-#define TAPPING_TERM 165
+#define TAPPING_TERM 160
 
 #define TAPPING_TERM_PER_KEY
 
@@ -39,3 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Always send escape when GUI is pressed
 #define GRAVE_ESC_GUI_OVERRIDE
+
+// ripped from https://www.reddit.com/r/olkb/comments/72u8ou/qmk_mouse_keys_rock/
+#define MOUSEKEY_INTERVAL 16
+#define MOUSEKEY_DELAY 0
+#define MOUSEKEY_TIME_TO_MAX 60
+#define MOUSEKEY_MAX_SPEED 7
+#define MOUSEKEY_WHEEL_DELAY 0
