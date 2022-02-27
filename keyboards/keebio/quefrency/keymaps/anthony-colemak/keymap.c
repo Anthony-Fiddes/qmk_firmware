@@ -87,100 +87,86 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case TD(GAME):
-        case TD(NAVT):
-        case TD(NUMT):
-        case TD(SH_CA):
-            return TAPPING_TERM + 50;
-        default:
-            return TAPPING_TERM;
-    }
+  switch (keycode) {
+	case TD(GAME):
+	case TD(NAVT):
+	case TD(NUMT):
+	case TD(SH_CA):
+	  return TAPPING_TERM + 50;
+	default:
+	  return TAPPING_TERM;
+  }
 }
 
 
 bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
-    switch(keycode) {
-		case LPRN:
-		case LBRC:
-		case LCBR:
-            return true;
-        default:
-            return false;
-    }
+  switch(keycode) {
+	case LPRN:
+	case LBRC:
+	case LCBR:
+	  return true;
+	default:
+	  return false;
+  }
 }
 
 void autoshift_press_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
-    switch(keycode) {
-        case LPRN:
-			add_weak_mods(MOD_BIT(KC_LSFT));
-			if (!shifted) {
-				register_code16(KC_9);
-			} else {
-				register_code16(KC_0);
-			}
-            break;
-        case LBRC:
-            register_code16((!shifted) ? KC_LBRC : KC_RBRC);
-            break;
-		case LCBR:
-            register_code16((!shifted) ? KC_LCBR : KC_RCBR);
-            break;
-        default:
-            if (shifted) {
-                add_weak_mods(MOD_BIT(KC_LSFT));
-            }
-			// Must be fixed if using Retro Shift
-            register_code16(keycode);
-    }
+  switch(keycode) {
+	case LPRN:
+	  add_weak_mods(MOD_BIT(KC_LSFT));
+	  if (!shifted) {
+		register_code16(KC_9);
+	  } else {
+		register_code16(KC_0);
+	  }
+	  break;
+	case LBRC:
+	  if (!shifted) {
+		register_code16(KC_LBRC);
+	  } else {
+		register_code16(KC_RBRC);
+	  }
+	  break;
+	case LCBR:
+	  add_weak_mods(MOD_BIT(KC_LSFT));
+	  if (!shifted) {
+		register_code16(KC_LBRC);
+	  } else {
+		register_code16(KC_RBRC);
+	  }
+	  break;
+	default:
+	  if (shifted) {
+		add_weak_mods(MOD_BIT(KC_LSFT));
+	  }
+	  // Must be fixed if using Retro Shift
+	  register_code16(keycode);
+  }
 }
 
 void autoshift_release_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
-    switch(keycode) {
-        case LPRN:
-			if (!shifted) {
-				unregister_code16(KC_9);
-			}
-            unregister_code16(KC_0);
-            break;
-        case LBRC:
-            unregister_code16((!shifted) ? KC_LBRC : KC_RBRC);
-            break;
-		case LCBR:
-            unregister_code16((!shifted) ? KC_LCBR : KC_RCBR);
-            break;
-        default:
-            // & 0xFF gets the Tap key for Tap Holds, required when using Retro Shift
-            unregister_code16(keycode & 0xFF);
-    }
-}
-
-// send the specified key code when pressed is true, unregister it otherwise.
-void send_key(uint16_t keycode, bool pressed) {
-	if (pressed) {
-	  register_code16(keycode);
-	} else {
-      unregister_code16(keycode);
-	}
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-		 /*  case LPRN: */
-		 /* if (record->event.pressed) { */
-		 /*   register_code16(KC_9); */
-		 /* } else { */
-		 /*   unregister_code16(KC_9); */
-		 /* } */
-		 /*    return true; */
-	   case LBRC:
-	     send_key(KC_LBRC, record->event.pressed);
-	     return true;
-	   case LCBR:
-	     send_key(KC_LCBR, record->event.pressed);
-	     return true;
-    default:
-      return true; // Process all other keycodes normally
+  switch(keycode) {
+	case LPRN:
+	  if (!shifted) {
+		unregister_code16(KC_9);
+	  }
+	  unregister_code16(KC_0);
+	  break;
+	case LBRC:
+	  if (!shifted) {
+		unregister_code16(KC_LBRC);
+	  }
+	  unregister_code16(KC_RBRC);
+	  break;
+	case LCBR:
+	  if (!shifted) {
+		unregister_code16(KC_LBRC);
+	  }
+	  unregister_code16(KC_RBRC);
+	  break;
+	default:
+	  // & 0xFF gets the Tap key for Tap Holds, required when using Retro Shift
+	  unregister_code16(keycode & 0xFF);
   }
 }
 
