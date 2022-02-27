@@ -14,6 +14,13 @@ extern keymap_config_t keymap_config;
 #define _QWERTY 3
 
 enum {
+	_ = SAFE_RANGE,
+	LPRN,
+	LBRC,
+	LCBR,
+};
+
+enum {
     // Toggle game layer on double tap, f9 when held
     GAME = 0,
     // Brackets
@@ -32,10 +39,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
   [CBRK] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
   [BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
-};
-
-enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
 };
 
 // Left-hand home row mods
@@ -65,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_NUMS] = LAYOUT_65_with_macro(
     _______, _______, KC_TILD, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_F6,   KC_F7,  KC_F8,    KC_F9,    KC_F10,  KC_F11,  KC_F12,  KC_DEL,  KC_BSPC, _______, \
     _______, _______, KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,  KC_PLUS, KC_7,   KC_8,     KC_9,     KC_COLN, KC_PIPE, _______, KC_PIPE, _______, \
-    _______, _______, KC_ESC,  KC_EQL,  TD(BRC), TD(CBRK),TD(PRN), KC_UNDS,  KC_DOT,  KC_4,   KC_5,     KC_6,     KC_MINS, KC_AMPR, _______, _______, \
+    _______, _______, KC_ESC,  KC_EQL,  LBRC,    LCBR,    LPRN,    KC_UNDS,  KC_DOT,  KC_4,   KC_5,     KC_6,     KC_MINS, KC_AMPR, _______, _______, \
     _______, _______, KC_CAPS, KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH,  KC_COMM, KC_1,   KC_2,     KC_3,     KC_QUES, KC_ASTR, _______, _______, \
     RESET,   _______, _______, _______, _______, _______, _______,           _______, KC_0,   _______,  _______,  _______, _______, _______, _______
   ),
@@ -101,20 +104,89 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        if (clockwise) {
-            tap_code(KC_PGDN);
-        } else {
-            tap_code(KC_PGUP);
-        }
+
+bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+		case LPRN:
+		case LBRC:
+		case LCBR:
+            return true;
+        default:
+            return false;
     }
-    else if (index == 1) {
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    }
-    return true;
 }
+
+void autoshift_press_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
+    switch(keycode) {
+        case LPRN:
+			add_weak_mods(MOD_BIT(KC_LSFT));
+			if (!shifted) {
+				register_code16(KC_9);
+			} else {
+				register_code16(KC_0);
+			}
+            break;
+        case LBRC:
+            register_code16((!shifted) ? KC_LBRC : KC_RBRC);
+            break;
+		case LCBR:
+            register_code16((!shifted) ? KC_LCBR : KC_RCBR);
+            break;
+        default:
+            if (shifted) {
+                add_weak_mods(MOD_BIT(KC_LSFT));
+            }
+			// Must be fixed if using Retro Shift
+            register_code16(keycode);
+    }
+}
+
+void autoshift_release_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
+    switch(keycode) {
+        case LPRN:
+			if (!shifted) {
+				unregister_code16(KC_9);
+			}
+            unregister_code16(KC_0);
+            break;
+        case LBRC:
+            unregister_code16((!shifted) ? KC_LBRC : KC_RBRC);
+            break;
+		case LCBR:
+            unregister_code16((!shifted) ? KC_LCBR : KC_RCBR);
+            break;
+        default:
+            // & 0xFF gets the Tap key for Tap Holds, required when using Retro Shift
+            unregister_code16(keycode & 0xFF);
+    }
+}
+
+// send the specified key code when pressed is true, unregister it otherwise.
+void send_key(uint16_t keycode, bool pressed) {
+	if (pressed) {
+	  register_code16(keycode);
+	} else {
+      unregister_code16(keycode);
+	}
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+		 /*  case LPRN: */
+		 /* if (record->event.pressed) { */
+		 /*   register_code16(KC_9); */
+		 /* } else { */
+		 /*   unregister_code16(KC_9); */
+		 /* } */
+		 /*    return true; */
+	   case LBRC:
+	     send_key(KC_LBRC, record->event.pressed);
+	     return true;
+	   case LCBR:
+	     send_key(KC_LCBR, record->event.pressed);
+	     return true;
+    default:
+      return true; // Process all other keycodes normally
+  }
+}
+
