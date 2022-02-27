@@ -23,22 +23,18 @@ enum {
 enum {
     // Toggle game layer on double tap, f9 when held
     GAME = 0,
-    // Brackets
-    PRN,
-    CBRK,
-    BRC,
     // Layer Toggles
     NAVT,
     NUMT,
+	// Usually shift but caps on double tap
+	SH_CA,
 };
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_F9, _QWERTY),
   [NAVT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RALT, _NAV),
   [NUMT] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_APP, _NUMS),
-  [PRN] = ACTION_TAP_DANCE_DOUBLE(KC_LPRN, KC_RPRN),
-  [CBRK] = ACTION_TAP_DANCE_DOUBLE(KC_LCBR, KC_RCBR),
-  [BRC] = ACTION_TAP_DANCE_DOUBLE(KC_LBRC, KC_RBRC),
+  [SH_CA] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
 };
 
 // Left-hand home row mods
@@ -61,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F1,      KC_F2,   KC_GESC,  KC_1,    KC_2,    KC_3,     KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,       KC_MINS, KC_EQL,  KC_DEL,  KC_BSPC,    KC_PGUP, \
     KC_F3,      KC_F4,   KC_TAB,   KC_Q,    KC_W,    KC_F,     KC_P,    KC_G,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN,    KC_LBRC, KC_RBRC, KC_BSLS,             KC_PGDN, \
     KC_F5,      KC_F6,   KC_BSPC,  HM_A,    HM_R,    HM_S,     HM_T,    KC_D,    KC_H,    HM_N,    HM_E,    HM_I,    HM_O,       KC_QUOT, KC_ENT,                       KC_HOME, \
-    KC_F7,      KC_F8,   KC_LSFT,  KC_Z,    KC_X,    KC_C,     KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT, KC_UP,                        KC_END, \
+    KC_F7,      KC_F8,   TD(SH_CA),KC_Z,    KC_X,    KC_C,     KC_V,    KC_B,    KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT, KC_UP,                        KC_END, \
     TD(GAME),   KC_PSCR, KC_LCTL,  KC_LALT, KC_LGUI, TD(NUMT), HM_LSPC,           _______,HM_RSPC, TD(NAVT),KC_RCTL, KC_RGUI,    KC_LEFT, KC_DOWN, KC_RGHT
   ),
 
@@ -69,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, KC_TILD, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_F6,   KC_F7,  KC_F8,    KC_F9,    KC_F10,  KC_F11,  KC_F12,  KC_DEL,  KC_BSPC, _______, \
     _______, _______, KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,  KC_PLUS, KC_7,   KC_8,     KC_9,     KC_COLN, KC_PIPE, _______, KC_PIPE, _______, \
     _______, _______, KC_ESC,  KC_EQL,  LBRC,    LCBR,    LPRN,    KC_UNDS,  KC_DOT,  KC_4,   KC_5,     KC_6,     KC_MINS, KC_AMPR, _______, _______, \
-    _______, _______, KC_CAPS, KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH,  KC_COMM, KC_1,   KC_2,     KC_3,     KC_QUES, KC_ASTR, _______, _______, \
+    _______, _______, _______, KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH,  KC_COMM, KC_1,   KC_2,     KC_3,     KC_QUES, KC_ASTR, _______, _______, \
     RESET,   _______, _______, _______, _______, _______, _______,           _______, KC_0,   _______,  _______,  _______, _______, _______, _______
   ),
 
@@ -77,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, KC_GESC, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,  KC_BSPC, _______, \
     _______, _______, _______, KC_MPRV, KC_VOLU, KC_VOLD, KC_MNXT, KC_MPLY, _______, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  _______, _______, _______, _______, \
     _______, _______, KC_ESC,  KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, _______, _______, KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, _______, _______, _______, \
-    _______, RGB_TOG, KC_CAPS, _______, KC_BTN3, KC_BTN2, KC_BTN1, _______, _______, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, _______, _______, _______, \
+    _______, RGB_TOG, _______, _______, KC_BTN3, KC_BTN2, KC_BTN1, _______, _______, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, _______, _______, _______, \
     RESET,   RGB_MOD, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
@@ -92,12 +88,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case TD(PRN):
-        case TD(CBRK):
-        case TD(BRC):
         case TD(GAME):
         case TD(NAVT):
         case TD(NUMT):
+        case TD(SH_CA):
             return TAPPING_TERM + 50;
         default:
             return TAPPING_TERM;
