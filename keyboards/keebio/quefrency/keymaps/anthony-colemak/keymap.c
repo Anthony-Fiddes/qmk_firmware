@@ -170,3 +170,21 @@ void autoshift_release_user(uint16_t keycode, bool shifted, keyrecord_t *record)
   }
 }
 
+bool get_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+#    ifndef NO_AUTO_SHIFT_ALPHA
+	  case KC_A ... KC_Z:
+#    endif
+#    ifndef NO_AUTO_SHIFT_NUMERIC
+	  case KC_1 ... KC_0:
+#    endif
+#    ifndef NO_AUTO_SHIFT_SPECIAL
+	  case KC_MINUS ... KC_SLASH:
+	  case KC_NONUS_BACKSLASH:
+#    endif
+	  // Please don't auto shift my tab ever
+	  case KC_TAB:
+		return false;
+    }
+    return get_custom_auto_shifted_key(keycode, record);
+}
