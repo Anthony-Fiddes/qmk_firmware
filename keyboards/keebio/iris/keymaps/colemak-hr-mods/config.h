@@ -40,3 +40,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MOUSEKEY_TIME_TO_MAX 60
 #define MOUSEKEY_MAX_SPEED 7
 #define MOUSEKEY_WHEEL_DELAY 0
+
+// Auto Shift
+#define AUTO_SHIFT_TIMEOUT 150
+#define NO_AUTO_SHIFT_ALPHA
+#define NO_AUTO_SHIFT_NUMERIC
+
+// Save space
+#define NO_ACTION_ONESHOT
