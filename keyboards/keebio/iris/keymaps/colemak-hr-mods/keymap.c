@@ -22,6 +22,13 @@
 
 #define TOG_GAME TG(_QWERTY)
 
+enum {
+	_ = SAFE_RANGE,
+	LPRN,
+	LBRC,
+	LCBR,
+};
+
 // Tap dance indices
 enum {
     // Home OS
@@ -58,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_BSPC, HM_A,    HM_R,    HM_S,    HM_T,    KC_D,                               KC_H,    HM_N,    HM_E,     HM_I,   HM_O,    KC_QUOT,
       //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-         TD(SH_C),KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    HM_SPC,           HM_TAB,  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
+         TD(SH_C),KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    HM_SPC,           HM_ENT,  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
       //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                        TD(H_LOS),KC_APP,  HM_SPC,                    HM_ENT,  KC_TAB,  TD(H_RAL)
       //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -70,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        KC_QUES, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                            KC_PLUS, KC_7,    KC_8,    KC_9,    KC_COLN, KC_PIPE,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_ESC,  KC_EQL,  TD(BRC), TD(CBRK),TD(PRN), KC_UNDS,                            KC_DOT,  KC_4,    KC_5,    KC_6,    KC_MINS, KC_AMPR,
+       KC_ESC,  KC_EQL,  LBRC,    LCBR,    LPRN,    KC_UNDS,                            KC_DOT,  KC_4,    KC_5,    KC_6,    KC_MINS, KC_AMPR,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
        RESET,   KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH, _______,          _______, KC_COMM, KC_1,    KC_2,    KC_3,    KC_PLUS, KC_ASTR,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
@@ -111,9 +118,101 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case TD(H_LOS):
         case TD(H_RAL):
-        case HM_SPC:
+	    case TD(GAME):
+		case TD(SH_C):
             return TAPPING_TERM + 90;
         default:
             return TAPPING_TERM;
     }
+}
+
+bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+  switch(keycode) {
+	case LPRN:
+	case LBRC:
+	case LCBR:
+	  return true;
+	default:
+	  return false;
+  }
+}
+
+void autoshift_press_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
+  switch(keycode) {
+	case LPRN:
+	  add_weak_mods(MOD_BIT(KC_LSFT));
+	  if (!shifted) {
+		register_code16(KC_9);
+	  } else {
+		register_code16(KC_0);
+	  }
+	  break;
+	case LBRC:
+	  if (!shifted) {
+		register_code16(KC_LBRC);
+	  } else {
+		register_code16(KC_RBRC);
+	  }
+	  break;
+	case LCBR:
+	  add_weak_mods(MOD_BIT(KC_LSFT));
+	  if (!shifted) {
+		register_code16(KC_LBRC);
+	  } else {
+		register_code16(KC_RBRC);
+	  }
+	  break;
+	default:
+	  if (shifted) {
+		add_weak_mods(MOD_BIT(KC_LSFT));
+	  }
+	  // Must be fixed if using Retro Shift
+	  register_code16(keycode);
+  }
+}
+
+void autoshift_release_user(uint16_t keycode, bool shifted, keyrecord_t *record) {
+  switch(keycode) {
+	case LPRN:
+	  if (!shifted) {
+		unregister_code16(KC_9);
+	  }
+	  unregister_code16(KC_0);
+	  break;
+	case LBRC:
+	  if (!shifted) {
+		unregister_code16(KC_LBRC);
+	  }
+	  unregister_code16(KC_RBRC);
+	  break;
+	case LCBR:
+	  if (!shifted) {
+		unregister_code16(KC_LBRC);
+	  }
+	  unregister_code16(KC_RBRC);
+	  break;
+	default:
+	  // & 0xFF gets the Tap key for Tap Holds, required when using Retro Shift
+	  unregister_code16(keycode & 0xFF);
+  }
+}
+
+bool get_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+	  // Please don't auto shift my tab ever
+	  case KC_TAB:
+		return false;
+#    ifndef NO_AUTO_SHIFT_ALPHA
+	  case KC_A ... KC_Z:
+#    endif
+#    ifndef NO_AUTO_SHIFT_NUMERIC
+	  case KC_1 ... KC_0:
+#    endif
+#    ifndef NO_AUTO_SHIFT_SPECIAL
+	  case KC_MINUS ... KC_SLASH:
+	  case KC_NONUS_BACKSLASH:
+#    endif
+	    return true;
+    }
+    return get_custom_auto_shifted_key(keycode, record);
 }

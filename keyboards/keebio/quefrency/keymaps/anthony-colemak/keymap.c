@@ -172,6 +172,9 @@ void autoshift_release_user(uint16_t keycode, bool shifted, keyrecord_t *record)
 
 bool get_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+	  // Please don't auto shift my tab ever
+	  case KC_TAB:
+		return false;
 #    ifndef NO_AUTO_SHIFT_ALPHA
 	  case KC_A ... KC_Z:
 #    endif
@@ -182,9 +185,7 @@ bool get_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
 	  case KC_MINUS ... KC_SLASH:
 	  case KC_NONUS_BACKSLASH:
 #    endif
-	  // Please don't auto shift my tab ever
-	  case KC_TAB:
-		return false;
+	    return true;
     }
     return get_custom_auto_shifted_key(keycode, record);
 }
