@@ -2,3 +2,4 @@ MOUSEKEY_ENABLE = yes
 CONSOLE_ENABLE = no     # Console for debug
 TAP_DANCE_ENABLE = yes
 AUTO_SHIFT_ENABLE = yes
+CAPS_WORD_ENABLE = yes

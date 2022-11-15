@@ -37,8 +37,6 @@ enum {
     H_RAL,
     // Toggle game layer on double tap, rshift when held
     GAME,
-    // Usually shift, double tap for caps.
-    SH_C,
 	// Usually shift, double tap to reset
     RST,
 };
@@ -47,7 +45,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [H_LOS] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_LGUI, _NUMS),
   [H_RAL] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RALT, _NAV),
   [GAME] = ACTION_TAP_DANCE_LAYER_TOGGLE(KC_RSFT, _QWERTY),
-  [SH_C] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
   [RST] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, RESET),
 };
 
@@ -61,9 +58,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_BSPC, HM_A,    HM_R,    HM_S,    HM_T,    KC_D,                               KC_H,    HM_N,    HM_E,     HM_I,   HM_O,    KC_QUOT,
       //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-         TD(SH_C),KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_ESC,           KC_BSLS, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
+         CAPSWRD, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_ESC,           KC_BSLS, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
       //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
-                                       TD(H_LOS),KC_APP,  HM_SPC,                    HM_ENT,  KC_TAB,  TD(H_RAL)
+                                        KC_LEFT, KC_DOWN,  HM_SPC,                   HM_ENT,  KC_UP,   KC_RGHT
       //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
 ),
 
@@ -75,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
        KC_ESC,  KC_EQL,  LBRC,    LCBR,    LPRN,    KC_UNDS,                            KC_DOT,  KC_4,    KC_5,    KC_6,    KC_MINS, KC_AMPR,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       TD(RST),   KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH, _______,          _______, KC_COMM, KC_1,    KC_2,    KC_3,    KC_PLUS, KC_ASTR,
+       TD(RST), KC_CIRC, KC_RBRC, KC_RCBR, KC_RPRN, KC_SLSH, _______,          _______, KC_COMM, KC_1,    KC_2,    KC_3,    KC_PLUS, KC_ASTR,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                       _______, _______, _______,                   _______, KC_0,    KC_0
     //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -85,11 +82,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
        KC_F12,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F4,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_MUTE, KC_MPRV, KC_VOLU, KC_VOLD, KC_MNXT, KC_MPLY,                            KC_BTN3, KC_HOME, KC_PGUP, KC_PGDN, KC_END,  KC_ACL2,
+       KC_MUTE, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, KC_MPLY,                            KC_BTN3, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_ACL2,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
-       KC_ESC,  KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, KC_APP,                             KC_BTN2, KC_LEFT, KC_UP,   KC_DOWN, KC_RGHT, KC_ACL1,
+       KC_ESC,  KC_LGUI, KC_LALT, KC_LSFT, KC_LCTL, KC_APP,                             KC_BTN2, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_ACL1,
     //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-       TD(RST), RGB_TOG, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, KC_BTN1, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, KC_ACL0,
+       TD(RST), RGB_TOG, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, _______,          _______, KC_BTN1, KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_ACL0,
     //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                       _______, _______, _______,                   _______, _______, _______
     //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
@@ -115,7 +112,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case TD(H_LOS):
         case TD(H_RAL):
 	    case TD(GAME):
-		case TD(SH_C):
+	    case TD(RST):
             return TAPPING_TERM + 90;
         default:
             return TAPPING_TERM;
