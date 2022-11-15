@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
          KC_BSPC, HM_A,    HM_R,    HM_S,    HM_T,    KC_D,                               KC_H,    HM_N,    HM_E,     HM_I,   HM_O,    KC_QUOT,
       //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
-         CAPSWRD, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_ESC,           KC_BSLS, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
+         CAPSWRD, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_ESC,           KC_TAB,  KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, TD(GAME),
       //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
                                         KC_LEFT, KC_DOWN,  HM_SPC,                   HM_ENT,  KC_UP,   KC_RGHT
       //                               └────────┴────────┴────────┘                 └────────┴────────┴────────┘
